@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  announcements:
+    build: .
+    container_name: school-announcements
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    volumes:
+      # Mount slides folder for custom announcement images
+      # Put your images in ./slides/ folder on the host
+      - ./slides:/usr/share/nginx/html/slides:ro
+      # Mount config.js to allow easy updates without rebuilding
+      - ./config.js:/usr/share/nginx/html/config.js:ro
+    environment:
+      - TZ=America/New_York  # Adjust timezone as needed
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      - "com.school.app=announcements"
+      - "com.school.description=School Announcements Display System"

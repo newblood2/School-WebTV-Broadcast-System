@@ -1,0 +1,324 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 75% 25%;
+    grid-template-rows: 80% 20%;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+}
+
+/* Main Content Area - 75% width, 80% height */
+.main-content {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.content-display {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Slideshow Styles */
+.slideshow-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide {
+    display: none;
+    text-align: center;
+    animation: fadeIn 1s;
+    width: 100%;
+}
+
+.slide.active {
+    display: block;
+}
+
+.slide h1 {
+    font-size: 6rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+}
+
+.slide h2 {
+    font-size: 4.5rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.3;
+}
+
+.slide p {
+    font-size: 3rem;
+    font-weight: 400;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.5;
+}
+
+.slide ul {
+    list-style: none;
+    text-align: left;
+    display: inline-block;
+}
+
+.slide ul li {
+    font-size: 2.8rem;
+    margin: 2rem 0;
+    padding-left: 3rem;
+    position: relative;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.4;
+}
+
+.slide ul li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    font-size: 3.5rem;
+    color: #ffd700;
+}
+
+/* Livestream Frame */
+.livestream-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Weather Panel - 25% width, 100% height */
+.weather-panel {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-header h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Current Weather */
+.current-weather {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.weather-icon img {
+    width: 120px;
+    height: 120px;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.temperature {
+    font-size: 5rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.weather-description {
+    font-size: 2rem;
+    font-weight: 400;
+    text-transform: capitalize;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.6rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.detail .label {
+    font-weight: 600;
+}
+
+/* Week Forecast */
+.week-forecast {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.forecast-day {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.2s;
+}
+
+.forecast-day:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.forecast-day-name {
+    font-size: 1.8rem;
+    font-weight: 600;
+    flex: 1;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.forecast-icon {
+    flex: 0 0 60px;
+    text-align: center;
+}
+
+.forecast-icon img {
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.forecast-temps {
+    flex: 1;
+    text-align: right;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.forecast-high {
+    color: #ffcc00;
+}
+
+.forecast-low {
+    color: #a0c4ff;
+    margin-left: 0.5rem;
+}
+
+/* Bottom Panel - 75% width, 20% height */
+.bottom-panel {
+    grid-column: 1;
+    grid-row: 2;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-top: 3px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+}
+
+.school-name h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+}
+
+.datetime-display {
+    text-align: right;
+}
+
+.time {
+    font-size: 4.5rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
+}
+
+.date {
+    font-size: 2.2rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments for 4K displays */
+@media screen and (min-width: 2560px) {
+    .slide h1 { font-size: 9rem; }
+    .slide h2 { font-size: 7rem; }
+    .slide p { font-size: 4.5rem; }
+    .slide ul li { font-size: 4rem; }
+    .slide ul li::before { font-size: 5rem; }
+
+    .weather-header h2 { font-size: 4.5rem; }
+    .temperature { font-size: 7rem; }
+    .weather-description { font-size: 3rem; }
+    .detail { font-size: 2.4rem; }
+    .forecast-day-name { font-size: 2.6rem; }
+    .forecast-temps { font-size: 2.6rem; }
+    .forecast-icon img { width: 90px; height: 90px; }
+    .weather-icon img { width: 180px; height: 180px; }
+
+    .school-name h1 { font-size: 5.5rem; }
+    .time { font-size: 6.5rem; }
+    .date { font-size: 3.2rem; }
+}
+
+/* Scrollbar styling for weather panel */
+.weather-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.weather-panel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.weather-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.weather-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
