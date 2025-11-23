@@ -6,24 +6,23 @@
 (function() {
     'use strict';
 
-    // Constants
-    const AUTO_REFRESH_HOUR = 3; // 3 AM
-    const DEFAULT_SCHOOL_NAME = 'School Name';
+    // Import constants
+    const CONSTANTS = window.APP_CONSTANTS;
 
     /**
      * Initializes the school name across all display elements
      */
     function initializeSchoolName() {
-        const schoolName = (window.CONFIG && window.CONFIG.SCHOOL_NAME) || DEFAULT_SCHOOL_NAME;
+        const schoolName = (window.CONFIG && window.CONFIG.SCHOOL_NAME) || CONSTANTS.DEFAULT_SCHOOL_NAME;
 
         // Update bottom panel school name
-        const schoolNameElement = document.getElementById('schoolName');
+        const schoolNameElement = document.getElementById(CONSTANTS.ELEMENT_IDS.SCHOOL_NAME);
         if (schoolNameElement) {
             schoolNameElement.textContent = schoolName;
         }
 
         // Update welcome message
-        const welcomeElement = document.getElementById('welcomeMessage');
+        const welcomeElement = document.getElementById(CONSTANTS.ELEMENT_IDS.WELCOME_MESSAGE);
         if (welcomeElement) {
             welcomeElement.textContent = `Welcome to ${schoolName}`;
         }
@@ -46,25 +45,25 @@
      */
     function handleKeyPress(e) {
         switch(e.key) {
-            case 'ArrowRight':
+            case CONSTANTS.KEYBOARD.ARROW_RIGHT:
                 if (window.Slideshow) {
                     window.Slideshow.next();
                 }
                 break;
 
-            case 'ArrowLeft':
+            case CONSTANTS.KEYBOARD.ARROW_LEFT:
                 if (window.Slideshow) {
                     window.Slideshow.previous();
                 }
                 break;
 
-            case 'l':
-            case 'L':
+            case CONSTANTS.KEYBOARD.LIVESTREAM_TOGGLE:
+            case CONSTANTS.KEYBOARD.LIVESTREAM_TOGGLE_UPPER:
                 handleLivestreamToggle();
                 break;
 
-            case 'f':
-            case 'F':
+            case CONSTANTS.KEYBOARD.FULLSCREEN:
+            case CONSTANTS.KEYBOARD.FULLSCREEN_UPPER:
                 toggleFullscreen();
                 break;
         }
@@ -106,7 +105,7 @@
     function scheduleDaily3AMRefresh() {
         const now = new Date();
         const next3AM = new Date();
-        next3AM.setHours(AUTO_REFRESH_HOUR, 0, 0, 0);
+        next3AM.setHours(CONSTANTS.AUTO_REFRESH_HOUR, 0, 0, 0);
 
         // If 3 AM has already passed today, schedule for tomorrow
         if (now >= next3AM) {

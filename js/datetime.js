@@ -6,8 +6,8 @@
 (function() {
     'use strict';
 
-    // Constants
-    const UPDATE_INTERVAL_MS = 1000; // Update every second
+    // Import constants
+    const CONSTANTS = window.APP_CONSTANTS;
 
     /**
      * Updates the time and date display elements
@@ -34,7 +34,7 @@
         hours = hours ? hours : 12; // Convert 0 to 12
         const displayHours = String(hours).padStart(2, '0');
 
-        const timeElement = document.getElementById('timeDisplay');
+        const timeElement = document.getElementById(CONSTANTS.ELEMENT_IDS.TIME_DISPLAY);
         if (timeElement) {
             timeElement.textContent = `${displayHours}:${minutes}:${seconds} ${ampm}`;
         }
@@ -45,15 +45,12 @@
      * @param {Date} now - Current date/time
      */
     function updateDateDisplay(now) {
-        const options = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        };
-        const dateString = now.toLocaleDateString('en-US', options);
+        const dateString = now.toLocaleDateString(
+            CONSTANTS.LOCALE,
+            CONSTANTS.DATE_FORMAT_OPTIONS
+        );
 
-        const dateElement = document.getElementById('dateDisplay');
+        const dateElement = document.getElementById(CONSTANTS.ELEMENT_IDS.DATE_DISPLAY);
         if (dateElement) {
             dateElement.textContent = dateString;
         }
@@ -64,7 +61,7 @@
      */
     function init() {
         updateDateTime(); // Initial call
-        setInterval(updateDateTime, UPDATE_INTERVAL_MS);
+        setInterval(updateDateTime, CONSTANTS.DATETIME_UPDATE_INTERVAL_MS);
         console.log('DateTime module initialized');
     }
 

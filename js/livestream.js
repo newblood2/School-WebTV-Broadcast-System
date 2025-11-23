@@ -6,9 +6,8 @@
 (function() {
     'use strict';
 
-    // Constants
-    const DEFAULT_CHECK_INTERVAL_MS = 60000; // 1 minute
-    const STREAM_CHECK_TIMEOUT_MS = 5000; // 5 seconds
+    // Import constants
+    const CONSTANTS = window.APP_CONSTANTS;
 
     // State
     let livestreamMonitorInterval = null;
@@ -19,9 +18,9 @@
      * @param {string|null} url - Livestream URL or null to hide
      */
     function showLivestream(url) {
-        const livestreamFrame = document.getElementById('livestreamFrame');
+        const livestreamFrame = document.getElementById(CONSTANTS.ELEMENT_IDS.LIVESTREAM_FRAME);
         if (!livestreamFrame) {
-            console.error('Livestream frame element not found');
+            console.error(CONSTANTS.ERROR_MESSAGES.LIVESTREAM_FRAME_NOT_FOUND);
             return;
         }
 
@@ -83,7 +82,7 @@
 
             // For other streams (OBS, RTMP, HLS, etc.), try to fetch
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), STREAM_CHECK_TIMEOUT_MS);
+            const timeoutId = setTimeout(() => controller.abort(), CONSTANTS.LIVESTREAM_CHECK_TIMEOUT_MS);
 
             await fetch(url, {
                 method: 'HEAD',
@@ -123,7 +122,7 @@
      */
     function startLivestreamMonitoring() {
         const livestreamUrl = window.CONFIG && window.CONFIG.LIVESTREAM_URL;
-        const checkInterval = (window.CONFIG && window.CONFIG.LIVESTREAM_CHECK_INTERVAL) || DEFAULT_CHECK_INTERVAL_MS;
+        const checkInterval = (window.CONFIG && window.CONFIG.LIVESTREAM_CHECK_INTERVAL) || CONSTANTS.LIVESTREAM_CHECK_INTERVAL_MS;
 
         if (!livestreamUrl) {
             console.log('No livestream URL configured, auto-detection disabled');
@@ -156,7 +155,7 @@
         const livestreamUrl = window.CONFIG && window.CONFIG.LIVESTREAM_URL;
 
         if (!livestreamUrl) {
-            console.log('No livestream URL configured. Set LIVESTREAM_URL in config.js');
+            console.log(CONSTANTS.ERROR_MESSAGES.NO_LIVESTREAM_URL);
             return;
         }
 

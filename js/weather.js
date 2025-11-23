@@ -6,9 +6,8 @@
 (function() {
     'use strict';
 
-    // Constants
-    const UPDATE_INTERVAL_MS = 600000; // Update every 10 minutes
-    const MAX_FORECAST_DAYS = 5;
+    // Import constants
+    const CONSTANTS = window.APP_CONSTANTS;
 
     /**
      * Fetches weather data from OpenWeatherMap API
@@ -22,7 +21,7 @@
         const locationParam = buildLocationParam(LOCATION, CITY_ID);
 
         if (!locationParam) {
-            displayError('currentDesc', 'Location Not Set');
+            displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.LOCATION_NOT_SET);
             console.error('No location configured - set either LOCATION or CITY_ID in config.js');
             return;
         }
@@ -32,8 +31,9 @@
             await fetchWeatherForecast(locationParam, WEATHER_API_KEY);
         } catch (error) {
             console.error('Weather fetch error:', error);
-            if (!document.getElementById('currentDesc').textContent.startsWith('Error:')) {
-                displayError('currentDesc', 'Error Loading Weather');
+            const currentDescElement = document.getElementById(CONSTANTS.ELEMENT_IDS.CURRENT_DESC);
+            if (currentDescElement && !currentDescElement.textContent.startsWith('Error:')) {
+                displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.WEATHER_LOAD_ERROR);
             }
         }
     }
@@ -45,17 +45,17 @@
     function validateConfig() {
         if (!window.CONFIG || !window.CONFIG.WEATHER_API_KEY) {
             console.error('Weather API key not configured');
-            displayError('currentDesc', 'API Key Missing');
+            displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.API_KEY_MISSING);
             return false;
         }
 
         // Check if API key is still the placeholder
         if (window.CONFIG.WEATHER_API_KEY === 'YOUR_API_KEY_HERE') {
             console.error('Weather API key not configured - still using placeholder value');
-            displayError('currentDesc', 'Configure API Key');
-            displayError('currentTemp', '--°F');
-            displayError('feelsLike', '--°F');
-            displayError('humidity', '--%');
+            displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.API_KEY_PLACEHOLDER);
+            displayError(CONSTANTS.ELEMENT_IDS.CURRENT_TEMP, '--°F');
+            displayError(CONSTANTS.ELEMENT_IDS.FEELS_LIKE, '--°F');
+            displayError(CONSTANTS.ELEMENT_IDS.HUMIDITY, '--%');
             return false;
         }
 
@@ -85,7 +85,7 @@
      * @param {string} apiKey - OpenWeatherMap API key
      */
     async function fetchCurrentWeather(locationParam, apiKey) {
-        const url = `https://api.openweathermap.org/data/2.5/weather?${locationParam}&appid=${apiKey}&units=imperial`;
+        const url = `${CONSTANTS.WEATHER_API_CURRENT_URL}?${locationParam}&appid=${apiKey}&units=${CONSTANTS.WEATHER_API_UNITS}`;
         console.log('Fetching weather from:', url.replace(apiKey, 'API_KEY_HIDDEN'));
 
         const response = await fetch(url);
@@ -96,7 +96,7 @@
         } else {
             const errorMsg = data.message || 'Failed to fetch current weather';
             console.error('Weather API error:', errorMsg, '(Code:', data.cod, ')');
-            displayError('currentDesc', `Error: ${errorMsg}`);
+            displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, `Error: ${errorMsg}`);
             throw new Error(errorMsg);
         }
     }
@@ -107,7 +107,7 @@
      * @param {string} apiKey - OpenWeatherMap API key
      */
     async function fetchWeatherForecast(locationParam, apiKey) {
-        const url = `https://api.openweathermap.org/data/2.5/forecast?${locationParam}&appid=${apiKey}&units=imperial`;
+        const url = `${CONSTANTS.WEATHER_API_FORECAST_URL}?${locationParam}&appid=${apiKey}&units=${CONSTANTS.WEATHER_API_UNITS}`;
         const response = await fetch(url);
         const data = await response.json();
 
@@ -129,14 +129,14 @@
         const description = data.weather[0].description;
         const icon = data.weather[0].icon;
 
-        setElementText('currentTemp', `${temp}°F`);
-        setElementText('currentDesc', description);
-        setElementText('feelsLike', `${feelsLike}°F`);
-        setElementText('humidity', `${humidity}%`);
+        setElementText(CONSTANTS.ELEMENT_IDS.CURRENT_TEMP, `${temp}°F`);
+        setElementText(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, description);
+        setElementText(CONSTANTS.ELEMENT_IDS.FEELS_LIKE, `${feelsLike}°F`);
+        setElementText(CONSTANTS.ELEMENT_IDS.HUMIDITY, `${humidity}%`);
 
-        const iconElement = document.getElementById('currentIcon');
+        const iconElement = document.getElementById(CONSTANTS.ELEMENT_IDS.CURRENT_ICON);
         if (iconElement) {
-            iconElement.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+            iconElement.src = `${CONSTANTS.WEATHER_ICON_BASE_URL}/${icon}@2x.png`;
             iconElement.alt = description;
         }
     }
@@ -146,13 +146,13 @@
      * @param {Object} data - Forecast data from API
      */
     function updateWeekForecast(data) {
-        const forecastContainer = document.getElementById('weekForecast');
+        const forecastContainer = document.getElementById(CONSTANTS.ELEMENT_IDS.WEEK_FORECAST);
         if (!forecastContainer) return;
 
         forecastContainer.innerHTML = '';
 
         const dailyForecasts = aggregateDailyForecasts(data.list);
-        const days = Object.entries(dailyForecasts).slice(0, MAX_FORECAST_DAYS);
+        const days = Object.entries(dailyForecasts).slice(0, CONSTANTS.WEATHER_MAX_FORECAST_DAYS);
 
         days.forEach(([day, forecast]) => {
             const forecastElement = createForecastElement(day, forecast);
@@ -170,11 +170,10 @@
 
         forecastList.forEach(item => {
             const date = new Date(item.dt * 1000);
-            const dateKey = date.toLocaleDateString('en-US', {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric'
-            });
+            const dateKey = date.toLocaleDateString(
+                CONSTANTS.LOCALE,
+                CONSTANTS.FORECAST_DATE_FORMAT_OPTIONS
+            );
 
             // Use the 12:00 PM forecast for each day, or first available
             if (!dailyForecasts[dateKey]) {
@@ -208,17 +207,17 @@
      */
     function createForecastElement(day, forecast) {
         const forecastDay = document.createElement('div');
-        forecastDay.className = 'forecast-day';
+        forecastDay.className = CONSTANTS.CSS_CLASSES.FORECAST_DAY;
 
         forecastDay.innerHTML = `
-            <div class="forecast-day-name">${day}</div>
-            <div class="forecast-icon">
-                <img src="https://openweathermap.org/img/wn/${forecast.icon}.png"
+            <div class="${CONSTANTS.CSS_CLASSES.FORECAST_DAY_NAME}">${day}</div>
+            <div class="${CONSTANTS.CSS_CLASSES.FORECAST_ICON}">
+                <img src="${CONSTANTS.WEATHER_ICON_BASE_URL}/${forecast.icon}.png"
                      alt="${forecast.description}">
             </div>
-            <div class="forecast-temps">
-                <span class="forecast-high">${Math.round(forecast.temp_max)}°</span>
-                <span class="forecast-low">${Math.round(forecast.temp_min)}°</span>
+            <div class="${CONSTANTS.CSS_CLASSES.FORECAST_TEMPS}">
+                <span class="${CONSTANTS.CSS_CLASSES.FORECAST_HIGH}">${Math.round(forecast.temp_max)}°</span>
+                <span class="${CONSTANTS.CSS_CLASSES.FORECAST_LOW}">${Math.round(forecast.temp_min)}°</span>
             </div>
         `;
 
@@ -252,7 +251,7 @@
     function init() {
         if (window.CONFIG && window.CONFIG.WEATHER_API_KEY) {
             fetchWeather();
-            setInterval(fetchWeather, UPDATE_INTERVAL_MS);
+            setInterval(fetchWeather, CONSTANTS.WEATHER_UPDATE_INTERVAL_MS);
             console.log('Weather module initialized');
         } else {
             console.warn('Weather module not initialized - no API key configured');

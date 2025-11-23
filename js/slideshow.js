@@ -6,9 +6,8 @@
 (function() {
     'use strict';
 
-    // Constants
-    const DEFAULT_INTERVAL_MS = 8000;
-    const DEFAULT_SLIDES_FOLDER = 'slides';
+    // Import constants
+    const CONSTANTS = window.APP_CONSTANTS;
 
     // State
     let currentSlide = 0;
@@ -20,7 +19,7 @@
      * Loads image slides from the slides folder
      */
     async function loadImageSlides() {
-        const slidesFolder = (window.CONFIG && window.CONFIG.SLIDES_FOLDER) || DEFAULT_SLIDES_FOLDER;
+        const slidesFolder = (window.CONFIG && window.CONFIG.SLIDES_FOLDER) || CONSTANTS.SLIDESHOW_DEFAULT_FOLDER;
         const useImageSlides = (window.CONFIG && window.CONFIG.USE_IMAGE_SLIDES) || false;
 
         if (!useImageSlides) {
@@ -58,7 +57,7 @@
      * @param {Array} images - Array of image filenames
      */
     function createImageSlides(slidesFolder, images) {
-        const slideshowContainer = document.getElementById('slideshowContainer');
+        const slideshowContainer = document.getElementById(CONSTANTS.ELEMENT_IDS.SLIDESHOW_CONTAINER);
         if (!slideshowContainer) return;
 
         // Clear existing HTML slides
@@ -67,8 +66,8 @@
         // Create image slides
         images.forEach((imageName, index) => {
             const slideDiv = document.createElement('div');
-            slideDiv.className = 'slide';
-            if (index === 0) slideDiv.classList.add('active');
+            slideDiv.className = CONSTANTS.CSS_CLASSES.SLIDE;
+            if (index === 0) slideDiv.classList.add(CONSTANTS.CSS_CLASSES.SLIDE_ACTIVE);
 
             const img = document.createElement('img');
             img.src = `${slidesFolder}/${imageName}`;
@@ -86,13 +85,13 @@
      * Initializes the slideshow
      */
     function initSlideshow() {
-        slides = document.querySelectorAll('.slide');
+        slides = document.querySelectorAll(`.${CONSTANTS.CSS_CLASSES.SLIDE}`);
 
         if (slides.length > 0) {
             showSlide(0);
 
             // Auto-advance slides
-            const interval = (window.CONFIG && window.CONFIG.SLIDESHOW_INTERVAL) || DEFAULT_INTERVAL_MS;
+            const interval = (window.CONFIG && window.CONFIG.SLIDESHOW_INTERVAL) || CONSTANTS.SLIDESHOW_DEFAULT_INTERVAL_MS;
             slideshowInterval = setInterval(nextSlide, interval);
         }
     }
@@ -102,7 +101,7 @@
      * @param {number} index - Slide index to display
      */
     function showSlide(index) {
-        slides.forEach(slide => slide.classList.remove('active'));
+        slides.forEach(slide => slide.classList.remove(CONSTANTS.CSS_CLASSES.SLIDE_ACTIVE));
 
         if (index >= slides.length) {
             currentSlide = 0;
@@ -112,7 +111,7 @@
             currentSlide = index;
         }
 
-        slides[currentSlide].classList.add('active');
+        slides[currentSlide].classList.add(CONSTANTS.CSS_CLASSES.SLIDE_ACTIVE);
     }
 
     /**
@@ -151,7 +150,7 @@
      * Shows the slideshow container
      */
     function show() {
-        const slideshowContainer = document.getElementById('slideshowContainer');
+        const slideshowContainer = document.getElementById(CONSTANTS.ELEMENT_IDS.SLIDESHOW_CONTAINER);
         if (slideshowContainer) {
             slideshowContainer.style.display = 'flex';
         }
@@ -162,7 +161,7 @@
      * Hides the slideshow container
      */
     function hide() {
-        const slideshowContainer = document.getElementById('slideshowContainer');
+        const slideshowContainer = document.getElementById(CONSTANTS.ELEMENT_IDS.SLIDESHOW_CONTAINER);
         if (slideshowContainer) {
             slideshowContainer.style.display = 'none';
         }
