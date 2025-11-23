@@ -30,7 +30,12 @@
         try {
             const response = await fetch(`${slidesFolder}/slides.json`);
             if (!response.ok) {
-                console.warn('slides.json not found, falling back to HTML slides');
+                window.ErrorHandler.handle('slides.json not found', {
+                    level: window.ErrorLevel.WARNING,
+                    module: 'Slideshow',
+                    showNotification: false, // Don't notify for expected fallback
+                    userMessage: 'Slideshow configuration not found. Using default slides.'
+                });
                 return;
             }
 
@@ -38,7 +43,12 @@
             imageSlides = data.images || [];
 
             if (imageSlides.length === 0) {
-                console.warn('No images found in slides.json, using HTML slides');
+                window.ErrorHandler.handle('No images in slides.json', {
+                    level: window.ErrorLevel.WARNING,
+                    module: 'Slideshow',
+                    showNotification: false,
+                    userMessage: 'No images configured in slides.json. Using default slides.'
+                });
                 return;
             }
 
@@ -46,8 +56,13 @@
             createImageSlides(slidesFolder, imageSlides);
 
         } catch (error) {
-            console.error('Error loading image slides:', error);
-            console.log('Falling back to HTML slides');
+            window.ErrorHandler.handle(error, {
+                level: window.ErrorLevel.WARNING,
+                module: 'Slideshow',
+                showNotification: true,
+                userMessage: 'Failed to load image slides. Using default slides instead.',
+                recoverable: false
+            });
         }
     }
 
@@ -58,12 +73,20 @@
      */
     function createImageSlides(slidesFolder, images) {
         const slideshowContainer = document.getElementById(CONSTANTS.ELEMENT_IDS.SLIDESHOW_CONTAINER);
-        if (!slideshowContainer) return;
+        if (!slideshowContainer) {
+            window.ErrorHandler.handle('Slideshow container not found', {
+                level: window.ErrorLevel.ERROR,
+                module: 'Slideshow',
+                showNotification: true,
+                userMessage: 'Unable to initialize slideshow display.'
+            });
+            return;
+        }
 
         // Clear existing HTML slides
         slideshowContainer.innerHTML = '';
 
-        // Create image slides
+        // Create image slides with error handling
         images.forEach((imageName, index) => {
             const slideDiv = document.createElement('div');
             slideDiv.className = CONSTANTS.CSS_CLASSES.SLIDE;
@@ -75,6 +98,24 @@
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.objectFit = 'contain';
+
+            // Handle image loading errors
+            img.onerror = () => {
+                window.ErrorHandler.handle(`Failed to load image: ${imageName}`, {
+                    level: window.ErrorLevel.WARNING,
+                    module: 'Slideshow',
+                    showNotification: false, // Don't spam for each failed image
+                    userMessage: `Failed to load slide image: ${imageName}`
+                });
+
+                // Replace with error message
+                slideDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;">
+                        <h2 style="color: #e74c3c;">⚠️ Image Not Found</h2>
+                        <p style="font-size: 2rem;">${imageName}</p>
+                    </div>
+                `;
+            };
 
             slideDiv.appendChild(img);
             slideshowContainer.appendChild(slideDiv);

@@ -22,15 +22,35 @@
 
         if (!locationParam) {
             displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.LOCATION_NOT_SET);
-            console.error('No location configured - set either LOCATION or CITY_ID in config.js');
+            window.ErrorHandler.handle('No location configured', {
+                level: window.ErrorLevel.WARNING,
+                module: 'Weather',
+                showNotification: true,
+                userMessage: 'Weather location not set. Please configure LOCATION or CITY_ID in config.js'
+            });
             return;
         }
 
         try {
-            await fetchCurrentWeather(locationParam, WEATHER_API_KEY);
-            await fetchWeatherForecast(locationParam, WEATHER_API_KEY);
+            await window.ErrorHandler.handleNetworkError(
+                () => fetchCurrentWeather(locationParam, WEATHER_API_KEY),
+                {
+                    maxRetries: 2,
+                    module: 'Weather',
+                    userMessage: 'Failed to fetch current weather'
+                }
+            );
+
+            await window.ErrorHandler.handleNetworkError(
+                () => fetchWeatherForecast(locationParam, WEATHER_API_KEY),
+                {
+                    maxRetries: 2,
+                    module: 'Weather',
+                    userMessage: 'Failed to fetch weather forecast'
+                }
+            );
         } catch (error) {
-            console.error('Weather fetch error:', error);
+            // Error already handled by ErrorHandler
             const currentDescElement = document.getElementById(CONSTANTS.ELEMENT_IDS.CURRENT_DESC);
             if (currentDescElement && !currentDescElement.textContent.startsWith('Error:')) {
                 displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.WEATHER_LOAD_ERROR);
@@ -44,18 +64,28 @@
      */
     function validateConfig() {
         if (!window.CONFIG || !window.CONFIG.WEATHER_API_KEY) {
-            console.error('Weather API key not configured');
             displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.API_KEY_MISSING);
+            window.ErrorHandler.handle('Weather API key not configured', {
+                level: window.ErrorLevel.WARNING,
+                module: 'Weather',
+                showNotification: true,
+                userMessage: 'Weather API key is missing. Please add your API key to config.js'
+            });
             return false;
         }
 
         // Check if API key is still the placeholder
         if (window.CONFIG.WEATHER_API_KEY === 'YOUR_API_KEY_HERE') {
-            console.error('Weather API key not configured - still using placeholder value');
             displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, CONSTANTS.ERROR_MESSAGES.API_KEY_PLACEHOLDER);
             displayError(CONSTANTS.ELEMENT_IDS.CURRENT_TEMP, '--°F');
             displayError(CONSTANTS.ELEMENT_IDS.FEELS_LIKE, '--°F');
             displayError(CONSTANTS.ELEMENT_IDS.HUMIDITY, '--%');
+            window.ErrorHandler.handle('Weather API key is placeholder', {
+                level: window.ErrorLevel.WARNING,
+                module: 'Weather',
+                showNotification: true,
+                userMessage: 'Please replace YOUR_API_KEY_HERE with your actual OpenWeatherMap API key in config.js'
+            });
             return false;
         }
 
@@ -95,9 +125,12 @@
             updateCurrentWeather(data);
         } else {
             const errorMsg = data.message || 'Failed to fetch current weather';
-            console.error('Weather API error:', errorMsg, '(Code:', data.cod, ')');
             displayError(CONSTANTS.ELEMENT_IDS.CURRENT_DESC, `Error: ${errorMsg}`);
-            throw new Error(errorMsg);
+
+            // Create detailed error with user-friendly message
+            const error = new Error(errorMsg);
+            error.code = data.cod;
+            throw error;
         }
     }
 

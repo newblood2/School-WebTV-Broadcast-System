@@ -106,14 +106,27 @@
         const livestreamUrl = window.CONFIG && window.CONFIG.LIVESTREAM_URL;
         if (!livestreamUrl) return;
 
-        const isOnline = await checkLivestreamStatus(livestreamUrl);
+        try {
+            const isOnline = await checkLivestreamStatus(livestreamUrl);
 
-        if (isOnline && !isLivestreamActive) {
-            console.log('Livestream detected online, switching...');
-            showLivestream(livestreamUrl);
-        } else if (!isOnline && isLivestreamActive) {
-            console.log('Livestream went offline, switching to slideshow...');
-            showLivestream(null);
+            if (isOnline && !isLivestreamActive) {
+                console.log('Livestream detected online, switching...');
+                showLivestream(livestreamUrl);
+            } else if (!isOnline && isLivestreamActive) {
+                console.log('Livestream went offline, switching to slideshow...');
+                showLivestream(null);
+            }
+        } catch (error) {
+            window.ErrorHandler.handle(error, {
+                level: window.ErrorLevel.WARNING,
+                module: 'Livestream',
+                showNotification: false, // Don't notify for routine checks
+                userMessage: 'Failed to check livestream status.'
+            });
+            // Safely fall back to slideshow if we can't check
+            if (isLivestreamActive) {
+                showLivestream(null);
+            }
         }
     }
 
