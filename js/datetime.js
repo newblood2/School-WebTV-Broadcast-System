@@ -1,6 +1,14 @@
 /**
- * DateTime Module
- * Handles clock and date display updates
+ * @fileoverview DateTime Module - Real-time clock and date display management
+ * @module datetime
+ * @description Manages the real-time clock and date display with automatic updates.
+ * Updates every second to show current time in 12-hour format with AM/PM and full date.
+ *
+ * @example
+ * // Module initializes automatically on DOM ready
+ * // Displays: "09:45:23 PM" and "Monday, November 23, 2025"
+ *
+ * @requires module:constants - For update intervals and element IDs
  */
 
 (function() {
@@ -10,7 +18,11 @@
     const CONSTANTS = window.APP_CONSTANTS;
 
     /**
-     * Updates the time and date display elements
+     * Updates both time and date display elements
+     * @function updateDateTime
+     * @private
+     * @returns {void}
+     * @description Called every second to keep time and date synchronized
      */
     function updateDateTime() {
         const now = new Date();
@@ -21,7 +33,14 @@
 
     /**
      * Updates the time display in 12-hour format with AM/PM
-     * @param {Date} now - Current date/time
+     * @function updateTimeDisplay
+     * @private
+     * @param {Date} now - Current date/time object
+     * @returns {void}
+     * @description Converts 24-hour time to 12-hour format with zero-padded values
+     * @example
+     * // Displays: "02:30:45 PM" for 14:30:45
+     * updateTimeDisplay(new Date());
      */
     function updateTimeDisplay(now) {
         let hours = now.getHours();
@@ -42,7 +61,14 @@
 
     /**
      * Updates the date display with full weekday and date
-     * @param {Date} now - Current date/time
+     * @function updateDateDisplay
+     * @private
+     * @param {Date} now - Current date/time object
+     * @returns {void}
+     * @description Formats date as "Weekday, Month Day, Year" using Intl.DateTimeFormat
+     * @example
+     * // Displays: "Monday, November 23, 2025"
+     * updateDateDisplay(new Date());
      */
     function updateDateDisplay(now) {
         const dateString = now.toLocaleDateString(
@@ -57,7 +83,15 @@
     }
 
     /**
-     * Initializes the date/time display and starts the update interval
+     * Initializes the date/time display module
+     * @function init
+     * @private
+     * @returns {void}
+     * @description Sets up the display with current time/date and starts automatic updates.
+     * Updates occur every second (1000ms) as defined in CONSTANTS.DATETIME_UPDATE_INTERVAL_MS
+     * @example
+     * // Called automatically when DOM is ready
+     * init();
      */
     function init() {
         updateDateTime(); // Initial call

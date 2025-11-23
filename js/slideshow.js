@@ -1,6 +1,19 @@
 /**
- * Slideshow Module
- * Handles slideshow functionality including image slides and HTML slides
+ * @fileoverview Slideshow Module - Dynamic slide presentation management
+ * @module slideshow
+ * @description Manages slideshow functionality with support for both image-based slides
+ * (loaded from JSON) and HTML-based slides. Includes automatic advancement, manual navigation,
+ * and graceful error handling for missing images.
+ *
+ * @example
+ * // Module initializes automatically and provides public API
+ * window.Slideshow.next(); // Advance to next slide
+ * window.Slideshow.previous(); // Go to previous slide
+ * window.Slideshow.show(); // Show slideshow
+ * window.Slideshow.hide(); // Hide slideshow
+ *
+ * @requires module:constants - For intervals, folders, and CSS classes
+ * @requires module:error-handler - For error notifications
  */
 
 (function() {

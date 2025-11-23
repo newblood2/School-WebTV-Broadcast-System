@@ -1,6 +1,19 @@
 /**
- * Initialization Module
- * Handles app initialization, keyboard controls, and utilities
+ * @fileoverview Initialization Module - Application bootstrap and global controls
+ * @module init
+ * @description Handles application initialization, keyboard shortcuts, school name setup,
+ * and automatic 3 AM refresh scheduling. Coordinates startup of all other modules.
+ *
+ * @example
+ * // Module initializes automatically on DOM ready
+ * // Keyboard shortcuts available:
+ * // - Arrow Left/Right: Navigate slides
+ * // - F: Toggle fullscreen
+ * // - L: Toggle livestream
+ *
+ * @requires module:constants - For keyboard mappings and configuration
+ * @requires module:slideshow - For keyboard navigation
+ * @requires module:livestream - For livestream toggle
  */
 
 (function() {

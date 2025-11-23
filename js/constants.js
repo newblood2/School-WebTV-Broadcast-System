@@ -1,13 +1,52 @@
 /**
- * Constants Module
- * Centralized configuration for all magic numbers and default values
+ * @fileoverview Constants Module - Centralized configuration for all application constants
+ * @module constants
+ * @description Provides a frozen, read-only configuration object containing all magic numbers,
+ * default values, element IDs, CSS classes, and other constants used throughout the application.
+ * All values are frozen to prevent accidental modification.
+ *
+ * @example
+ * // Access constants in other modules
+ * const CONSTANTS = window.APP_CONSTANTS;
+ * setInterval(updateTime, CONSTANTS.DATETIME_UPDATE_INTERVAL_MS);
+ *
+ * @example
+ * // Use element IDs to prevent typos
+ * const element = document.getElementById(CONSTANTS.ELEMENT_IDS.TIME_DISPLAY);
  */
 
 (function() {
     'use strict';
 
     /**
+     * @typedef {Object} AppConstants
+     * @property {number} DATETIME_UPDATE_INTERVAL_MS - Time display update interval (1000ms)
+     * @property {number} AUTO_REFRESH_HOUR - Hour for daily refresh (3 = 3 AM)
+     * @property {number} WEATHER_UPDATE_INTERVAL_MS - Weather update interval (600000ms = 10 min)
+     * @property {number} WEATHER_MAX_FORECAST_DAYS - Maximum forecast days to display (5)
+     * @property {number} SLIDESHOW_DEFAULT_INTERVAL_MS - Default slide duration (8000ms)
+     * @property {string} SLIDESHOW_DEFAULT_FOLDER - Default slides folder path ('slides')
+     * @property {number} LIVESTREAM_CHECK_INTERVAL_MS - Livestream check interval (60000ms)
+     * @property {number} LIVESTREAM_CHECK_TIMEOUT_MS - Livestream check timeout (5000ms)
+     * @property {string} DEFAULT_SCHOOL_NAME - Default school name fallback
+     * @property {number} DISPLAY_4K_BREAKPOINT_PX - 4K display breakpoint (2560px)
+     * @property {string} WEATHER_API_CURRENT_URL - OpenWeatherMap current weather API URL
+     * @property {string} WEATHER_API_FORECAST_URL - OpenWeatherMap forecast API URL
+     * @property {string} WEATHER_API_UNITS - Weather API units ('imperial' for Fahrenheit)
+     * @property {string} WEATHER_ICON_BASE_URL - OpenWeatherMap icon base URL
+     * @property {Object.<string, string>} ELEMENT_IDS - HTML element ID references
+     * @property {Object.<string, string>} CSS_CLASSES - CSS class name references
+     * @property {Object.<string, string>} ERROR_MESSAGES - Standardized error messages
+     * @property {Object.<string, string>} KEYBOARD - Keyboard key mappings
+     * @property {Object.<string, string>} DATE_FORMAT_OPTIONS - Intl.DateTimeFormat options
+     * @property {Object.<string, string>} FORECAST_DATE_FORMAT_OPTIONS - Forecast date format
+     * @property {string} LOCALE - Locale for date/time formatting ('en-US')
+     */
+
+    /**
      * Application-wide constants
+     * @type {AppConstants}
+     * @readonly
      */
     window.APP_CONSTANTS = {
         // ========================================

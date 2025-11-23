@@ -1,6 +1,34 @@
 /**
- * Error Handler Module
- * Centralized error handling and user notification system
+ * @fileoverview Error Handler Module - Centralized error management and user notifications
+ * @module error-handler
+ * @description Provides comprehensive error handling with user-friendly toast notifications,
+ * automatic retry logic, severity-based responses, and global error catching. Prevents error
+ * notification spam with a queue system and handles both synchronous and asynchronous errors.
+ *
+ * @example
+ * // Basic error handling
+ * window.ErrorHandler.handle(error, {
+ *   level: window.ErrorLevel.ERROR,
+ *   module: 'Weather',
+ *   userMessage: 'Failed to load weather data'
+ * });
+ *
+ * @example
+ * // Network retry with exponential backoff
+ * await window.ErrorHandler.handleNetworkError(
+ *   () => fetch(url),
+ *   { maxRetries: 3, module: 'API' }
+ * );
+ *
+ * @example
+ * // Recoverable error with retry button
+ * window.ErrorHandler.handle(error, {
+ *   level: window.ErrorLevel.WARNING,
+ *   recoverable: true,
+ *   onRetry: () => retryOperation()
+ * });
+ *
+ * @requires module:constants - For element IDs and configuration
  */
 
 (function() {
@@ -14,7 +42,13 @@
     let isShowingNotification = false;
 
     /**
-     * Error severity levels
+     * Error severity levels enumeration
+     * @enum {string}
+     * @readonly
+     * @property {string} INFO - Informational message (blue)
+     * @property {string} WARNING - Warning message (orange)
+     * @property {string} ERROR - Error message (red)
+     * @property {string} CRITICAL - Critical error requiring attention (dark red, pulsing)
      */
     const ErrorLevel = {
         INFO: 'info',
@@ -24,7 +58,29 @@
     };
 
     /**
-     * Error handler class for managing application errors
+     * @typedef {Object} ErrorOptions
+     * @property {string} [level='error'] - Error severity level (info|warning|error|critical)
+     * @property {string} [module='Unknown'] - Module or component where error occurred
+     * @property {boolean} [showNotification=true] - Whether to show toast notification
+     * @property {string|null} [userMessage=null] - Custom user-friendly message
+     * @property {boolean} [recoverable=false] - Whether error can be retried
+     * @property {Function|null} [onRetry=null] - Callback function for retry button
+     */
+
+    /**
+     * @typedef {Object} NetworkRetryOptions
+     * @property {number} [maxRetries=3] - Maximum retry attempts
+     * @property {number} [retryDelay=1000] - Initial delay between retries (ms)
+     * @property {number} [backoffMultiplier=2] - Exponential backoff multiplier
+     * @property {string} [module='Network'] - Module name for logging
+     * @property {string} [userMessage='Network request failed'] - Error message
+     */
+
+    /**
+     * Centralized error handler for the application
+     * @class ErrorHandler
+     * @classdesc Manages all error handling, logging, and user notifications. Provides static
+     * methods for handling errors, displaying notifications, and retrying failed operations.
      */
     class ErrorHandler {
         /**

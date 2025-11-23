@@ -1,6 +1,15 @@
 /**
- * Weather Module
- * Handles weather API integration for current conditions and forecast
+ * @fileoverview Weather Module - OpenWeatherMap API integration
+ * @module weather
+ * @description Manages weather data fetching, display updates, and error handling for current
+ * conditions and 5-day forecast. Includes automatic retry logic for network failures.
+ *
+ * @example
+ * // Module initializes automatically if API key is configured
+ * // Updates weather every 10 minutes automatically
+ *
+ * @requires module:constants - For API URLs, update intervals, and element IDs
+ * @requires module:error-handler - For error handling and user notifications
  */
 
 (function() {
@@ -10,7 +19,38 @@
     const CONSTANTS = window.APP_CONSTANTS;
 
     /**
-     * Fetches weather data from OpenWeatherMap API
+     * @typedef {Object} WeatherData
+     * @property {number} cod - HTTP status code from API
+     * @property {string} message - Error message if cod !== 200
+     * @property {Object} main - Main weather data
+     * @property {number} main.temp - Current temperature
+     * @property {number} main.feels_like - Feels like temperature
+     * @property {number} main.humidity - Humidity percentage
+     * @property {number} main.temp_max - Maximum temperature
+     * @property {number} main.temp_min - Minimum temperature
+     * @property {Array<Object>} weather - Weather condition array
+     * @property {string} weather[].description - Weather description
+     * @property {string} weather[].icon - Weather icon code
+     */
+
+    /**
+     * @typedef {Object} ForecastData
+     * @property {string} cod - HTTP status code from API
+     * @property {Array<Object>} list - Forecast items
+     * @property {number} list[].dt - Timestamp
+     * @property {Object} list[].main - Main weather data
+     * @property {Array<Object>} list[].weather - Weather conditions
+     */
+
+    /**
+     * Fetches weather data from OpenWeatherMap API with error handling and retry logic
+     * @async
+     * @function fetchWeather
+     * @private
+     * @returns {Promise<void>}
+     * @throws {Error} Network errors are caught and handled by ErrorHandler
+     * @description Validates configuration, builds location parameters, and fetches both
+     * current weather and 5-day forecast. Includes automatic retry on network failures.
      */
     async function fetchWeather() {
         if (!validateConfig()) {
@@ -59,8 +99,16 @@
     }
 
     /**
-     * Validates weather API configuration
-     * @returns {boolean} True if config is valid
+     * Validates weather API configuration and displays user-friendly error messages
+     * @function validateConfig
+     * @private
+     * @returns {boolean} True if configuration is valid and ready to use
+     * @description Checks for presence and validity of WEATHER_API_KEY in window.CONFIG.
+     * Shows appropriate error notifications for missing or placeholder API keys.
+     * @example
+     * if (validateConfig()) {
+     *   // Safe to proceed with API calls
+     * }
      */
     function validateConfig() {
         if (!window.CONFIG || !window.CONFIG.WEATHER_API_KEY) {

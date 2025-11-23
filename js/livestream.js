@@ -1,6 +1,20 @@
 /**
- * Livestream Module
- * Handles livestream toggle and auto-detection functionality
+ * @fileoverview Livestream Module - Automatic stream detection and display switching
+ * @module livestream
+ * @description Manages livestream display with automatic online/offline detection.
+ * Seamlessly switches between livestream (when available) and slideshow (fallback).
+ * Supports YouTube Live, OBS streams, and other iframe-compatible video sources.
+ *
+ * @example
+ * // Module initializes automatically if AUTO_DETECT_LIVESTREAM is enabled
+ * // Public API for manual control:
+ * window.Livestream.show('https://youtube.com/embed/VIDEO_ID');
+ * window.Livestream.toggle(); // Toggle between stream and slideshow
+ * window.Livestream.isActive(); // Check if livestream is showing
+ *
+ * @requires module:constants - For check intervals and element IDs
+ * @requires module:slideshow - For fallback display
+ * @requires module:error-handler - For error notifications
  */
 
 (function() {
