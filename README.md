@@ -42,7 +42,17 @@ A modern, real-time digital signage system designed for schools. Display announc
 
 ## Screenshots
 
-<!-- Add screenshots here -->
+
+<img width="2330" height="1279" alt="Screenshot 2025-11-25 204037" src="https://github.com/user-attachments/assets/37bd8cf5-7612-41fa-84aa-58a10095e56b" />
+<img width="2314" height="1158" alt="Screenshot 2025-11-25 204107" src="https://github.com/user-attachments/assets/3f130c43-572a-4e16-9c82-e14fd6f43c63" />
+<img width="2127" height="1185" alt="Screenshot 2025-11-25 204113" src="https://github.com/user-attachments/assets/369c172a-b808-4b36-9f35-a465bc3827e4" />
+<img width="2292" height="1268" alt="Screenshot 2025-11-25 204124" src="https://github.com/user-attachments/assets/e5d78893-82de-4173-af9c-558377c6b5f0" />
+<img width="2317" height="1282" alt="Screenshot 2025-11-25 204134" src="https://github.com/user-attachments/assets/0f5365e2-aa74-4858-8e4c-d674b00fd0a6" />
+<img width="2322" height="1274" alt="Screenshot 2025-11-25 204142" src="https://github.com/user-attachments/assets/42a63742-7105-4b11-b5e1-37f05efc8f2a" />
+<img width="2312" height="1179" alt="Screenshot 2025-11-25 204149" src="https://github.com/user-attachments/assets/035fbbce-e0ef-47c4-8c2b-628e86c7dc4f" />
+<img width="2008" height="1276" alt="Screenshot 2025-11-25 204239" src="https://github.com/user-attachments/assets/acab0335-616a-4967-a397-9ef5e5be39be" />
+<img width="2186" height="1302" alt="Screenshot 2025-11-25 204249" src="https://github.com/user-attachments/assets/d340b9ce-d7df-4bc3-a642-77bad2fb3c7d" />
+
 <details>
 <summary>Click to view screenshots</summary>
 
