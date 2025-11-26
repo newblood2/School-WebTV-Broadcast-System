@@ -43,8 +43,11 @@
                 </article>
             </div>
             <!-- Livestream iframe (hidden by default) -->
-            <iframe id="livestreamFrame" class="livestream-frame" style="display: none;" allowfullscreen
-                    title="School livestream video" aria-label="Live broadcast from school"></iframe>
+            <iframe id="livestreamFrame" class="livestream-frame" style="display: none;"
+                    allow="autoplay; fullscreen"
+                    allowfullscreen
+                    title="School livestream video"
+                    aria-label="Live broadcast from school"></iframe>
         </section>
     </main>
 
@@ -100,11 +103,33 @@
     <script src="js/config-validator.js"></script>
     <script src="js/cache.js"></script>
 
+    <!-- Theme Loader (loads admin panel settings) -->
+    <script src="js/theme-loader.js"></script>
+
+    <!-- Emergency Alert System -->
+    <script src="js/emergency-alert.js"></script>
+
     <!-- Application Modules -->
     <script src="js/datetime.js"></script>
     <script src="js/weather.js"></script>
     <script src="js/slideshow.js"></script>
     <script src="js/livestream.js"></script>
+    <script src="js/dismissal-display.js"></script>
     <script src="js/init.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

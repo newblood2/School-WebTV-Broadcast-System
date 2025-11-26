@@ -11,6 +11,24 @@ COPY nginx.conf /etc/nginx/conf.d/
 COPY index.html /usr/share/nginx/html/
 COPY styles.css /usr/share/nginx/html/
 COPY config.js /usr/share/nginx/html/
+COPY service-worker.js /usr/share/nginx/html/
+
+# Copy admin panel files
+COPY admin.html /usr/share/nginx/html/
+COPY admin.css /usr/share/nginx/html/
+COPY admin.js /usr/share/nginx/html/
+COPY admin-api-adapter.js /usr/share/nginx/html/
+COPY admin-roster.js /usr/share/nginx/html/
+COPY admin-displays.js /usr/share/nginx/html/
+COPY admin-slides.js /usr/share/nginx/html/
+COPY admin-emergency.js /usr/share/nginx/html/
+
+# Copy dismissal manager files
+COPY dismissal.html /usr/share/nginx/html/
+COPY dismissal.js /usr/share/nginx/html/
+
+# Copy stream viewer
+COPY stream-viewer.html /usr/share/nginx/html/
 
 # Copy JavaScript modules
 COPY js/ /usr/share/nginx/html/js/

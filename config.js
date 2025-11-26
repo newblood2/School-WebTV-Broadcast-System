@@ -1,23 +1,30 @@
 // ========================================
 // Configuration File
 // ========================================
+//
+// SECURITY NOTE: This file is served to browsers.
+// Sensitive values like API keys should be set in .env file.
+// The ADMIN_PASSWORD here must match the API_KEY in your .env file.
+//
+// For production deployment, copy this file and customize it.
+// See .env.example for environment variable options.
+// ========================================
 
 window.CONFIG = {
     // School/District Name
     // This appears in the bottom-left corner of the display
-    SCHOOL_NAME: 'Harford County Public Schools',
+    SCHOOL_NAME: 'Your School Name',
 
     // Weather API Configuration
     // Get your free API key from: https://openweathermap.org/api
-    // IMPORTANT: Replace 'YOUR_API_KEY_HERE' with your actual API key
-    // If you see "Configure API Key" or "Error Loading Weather", check this value
-    WEATHER_API_KEY: 'API KEY HERE',
+    // Leave as null to disable weather widget
+    WEATHER_API_KEY: null,
 
     // Location for weather - Use ONE of these two options:
 
     // OPTION 1: City name (City, State Code, Country Code)
     // Examples: 'Bel Air,MD,US' or 'Baltimore,MD,US' or 'New York,NY,US'
-    LOCATION: 'Bel Air,MD,US',
+    LOCATION: 'New York,NY,US',
 
     // OPTION 2: City ID (more reliable, find yours at: https://openweathermap.org/find)
     // Example: 4347778 for Bel Air, MD
@@ -44,8 +51,14 @@ window.CONFIG = {
     LIVESTREAM_URL: null,
 
     // Auto-switch to livestream when online (checks every minute)
-    AUTO_DETECT_LIVESTREAM: true,
+    AUTO_DETECT_LIVESTREAM: false,
 
     // Check interval for livestream status (milliseconds)
-    LIVESTREAM_CHECK_INTERVAL: 60000  // 1 minute
+    LIVESTREAM_CHECK_INTERVAL: 60000,  // 1 minute
+
+    // Admin Panel Password
+    // IMPORTANT: This must match the API_KEY in your .env file
+    // SECURITY: Change this to a strong, unique password!
+    // This password protects the admin panel and dismissal manager
+    ADMIN_PASSWORD: 'admin123'
 };

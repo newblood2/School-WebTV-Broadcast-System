@@ -1,0 +1,42 @@
+{
+  "customTheme": {
+    "bgGradientStart": "#134e5e",
+    "bgGradientEnd": "#71b280",
+    "mainContentBg": "#ffffff",
+    "mainContentOpacity": 12,
+    "weatherPanelBg": "#000000",
+    "weatherPanelOpacity": 32,
+    "bottomPanelBg": "#000000",
+    "bottomPanelOpacity": 42,
+    "accentColor": "#a8e6cf"
+  },
+  "customSlides": [
+    {
+      "type": "welcome",
+      "content": "<h1>Welcome</h1><p>Morning Announcements</p>"
+    },
+    {
+      "type": "events",
+      "content": "<h2>Today's Events</h2><ul><li>Student Council Meeting - 3:00 PM</li><li>Basketball Practice - 4:00 PM</li><li>Drama Club Rehearsal - 3:30 PM</li></ul>"
+    },
+    {
+      "type": "reminders",
+      "content": "<h2>Important Reminders</h2><ul><li>Report cards available next week</li><li>Picture day retakes on Friday</li><li>Winter break begins December 23rd</li></ul>"
+    },
+    {
+      "type": "custom",
+      "content": "<h2>test</h2><p>test</p>"
+    }
+  ],
+  "livestreamConfig": {
+    "enabled": true,
+    "url": "/stream/mystream/",
+    "autoDetect": true,
+    "checkInterval": 60000
+  },
+  "generalConfig": {
+    "schoolName": "St. Paul's Lutheran School",
+    "slideshowInterval": 8000
+  },
+  "USE_IMAGE_SLIDES": false
+}

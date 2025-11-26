@@ -56,11 +56,19 @@
             window.Slideshow.hide();
         }
 
+        // Add autoplay parameter for MediaMTX streams
+        let streamUrl = url;
+        if (url.includes('8889') || url.includes('/stream/')) {
+            // Check if URL already has query parameters
+            const separator = url.includes('?') ? '&' : '?';
+            streamUrl = url + separator + 'autoplay=yes';
+        }
+
         // Show livestream
-        livestreamFrame.src = url;
+        livestreamFrame.src = streamUrl;
         livestreamFrame.style.display = 'block';
         isLivestreamActive = true;
-        console.log('Switched to livestream:', url);
+        console.log('Switched to livestream:', streamUrl);
     }
 
     /**
@@ -94,11 +102,63 @@
                 return true;
             }
 
+            // For MediaMTX streams, check the stream API
+            if (url.includes(':8889/') || url.includes('/stream/') || url.includes('mediamtx') || url.includes('whip')) {
+                try {
+                    // Extract stream name from URL
+                    // Supports: /stream/mystream/, /stream/mystream/whip, http://localhost:8889/mystream/
+                    let streamName;
+
+                    // Remove trailing slash and query parameters for parsing
+                    const cleanUrl = url.split('?')[0].replace(/\/$/, '').replace(/\/whip$/, '').replace(/\/whep$/, '');
+
+                    if (cleanUrl.includes('/stream/')) {
+                        // Proxied stream: /stream/mystream → extract "mystream"
+                        streamName = cleanUrl.split('/stream/')[1].split('/')[0];
+                    } else {
+                        // Direct stream: http://host:8889/mystream → extract "mystream"
+                        streamName = cleanUrl.split('/').pop();
+                    }
+
+                    console.log('Checking MediaMTX stream:', streamName);
+
+                    // Check MediaMTX API for stream status
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), CONSTANTS.LIVESTREAM_CHECK_TIMEOUT_MS || 5000);
+
+                    const apiUrl = `/api/stream/${streamName}/status`;
+                    const response = await fetch(apiUrl, {
+                        method: 'GET',
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    const data = await response.json();
+
+                    // Check for error (path not found = stream not active)
+                    if (data.error) {
+                        console.log('MediaMTX stream offline:', data.error);
+                        return false;
+                    }
+
+                    // Check if stream has an active source (publisher)
+                    // When OBS is streaming, source will have a type like "rtmpConn"
+                    const isPublishing = data.source && data.source.id && data.source.id !== '';
+                    console.log('MediaMTX stream status:', isPublishing ? 'ONLINE (publishing)' : 'offline (no publisher)', data.source);
+                    return isPublishing;
+
+                } catch (error) {
+                    console.log('MediaMTX stream check failed:', error.message);
+                    return false;
+                }
+            }
+
             // For other streams (OBS, RTMP, HLS, etc.), try to fetch
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), CONSTANTS.LIVESTREAM_CHECK_TIMEOUT_MS);
+            const timeoutId = setTimeout(() => controller.abort(), CONSTANTS.LIVESTREAM_CHECK_TIMEOUT_MS || 5000);
 
-            await fetch(url, {
+            const response = await fetch(url, {
                 method: 'HEAD',
                 mode: 'no-cors', // Avoid CORS issues
                 signal: controller.signal

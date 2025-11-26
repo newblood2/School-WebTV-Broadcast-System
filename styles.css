@@ -361,14 +361,21 @@ body {
     padding: var(--spacing-lg);
     border-left: 3px solid var(--color-panel-border);
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
+    gap: var(--spacing-md);
+    max-height: 100vh;
+}
+
+.weather-header {
+    flex-shrink: 0;
 }
 
 .weather-header h2 {
-    font-size: var(--font-size-lg);
+    font-size: clamp(1.5rem, 2vw, var(--font-size-lg));
     font-weight: var(--font-weight-bold);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
     text-align: center;
     text-shadow: var(--shadow-text-md);
 }
@@ -377,42 +384,43 @@ body {
 .current-weather {
     background: var(--color-panel-bg);
     border-radius: var(--radius-xl);
-    padding: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
     text-align: center;
+    flex-shrink: 0;
 }
 
 .weather-icon img {
-    width: 120px;
-    height: 120px;
+    width: clamp(80px, 8vw, 120px);
+    height: clamp(80px, 8vw, 120px);
     filter: drop-shadow(var(--shadow-text-md));
 }
 
 .temperature {
-    font-size: 5rem;
+    font-size: clamp(3rem, 5vw, 5rem);
     font-weight: var(--font-weight-bold);
-    margin: var(--spacing-sm) 0;
+    margin: var(--spacing-xs) 0;
     text-shadow: var(--shadow-text-md);
 }
 
 .weather-description {
-    font-size: var(--font-size-sm);
+    font-size: clamp(1.2rem, 1.5vw, var(--font-size-sm));
     font-weight: var(--font-weight-normal);
     text-transform: capitalize;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     text-shadow: var(--shadow-text);
 }
 
 .weather-details {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 .detail {
     display: flex;
     justify-content: space-between;
-    font-size: var(--font-size-xxs);
+    font-size: clamp(1rem, 1.2vw, var(--font-size-xxs));
     text-shadow: var(--shadow-text);
 }
 
@@ -424,17 +432,21 @@ body {
 .week-forecast {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .forecast-day {
     background: var(--color-panel-bg);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
+    padding: clamp(0.5rem, 1vw, var(--spacing-md));
     display: flex;
     align-items: center;
     justify-content: space-between;
     transition: transform var(--transition-fast);
+    flex-shrink: 0;
 }
 
 .forecast-day:hover {
@@ -443,27 +455,27 @@ body {
 }
 
 .forecast-day-name {
-    font-size: var(--font-size-xs);
+    font-size: clamp(1.2rem, 1.3vw, var(--font-size-xs));
     font-weight: var(--font-weight-semibold);
     flex: 1;
     text-shadow: var(--shadow-text);
 }
 
 .forecast-icon {
-    flex: 0 0 60px;
+    flex: 0 0 clamp(40px, 4vw, 60px);
     text-align: center;
 }
 
 .forecast-icon img {
-    width: 60px;
-    height: 60px;
+    width: clamp(40px, 4vw, 60px);
+    height: clamp(40px, 4vw, 60px);
     filter: drop-shadow(var(--shadow-text));
 }
 
 .forecast-temps {
     flex: 1;
     text-align: right;
-    font-size: var(--font-size-xs);
+    font-size: clamp(1.2rem, 1.3vw, var(--font-size-xs));
     font-weight: var(--font-weight-semibold);
     text-shadow: var(--shadow-text);
 }
@@ -674,7 +686,192 @@ body {
 }
 
 /* Responsive adjustments for notifications */
+/* ========================================
+   Responsive Design - Mobile & Tablet
+   ======================================== */
+
+/* Tablet Portrait (768px - 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+    body {
+        grid-template-columns: 70% 30%;
+    }
+
+    .weather-panel {
+        padding: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+
+    .weather-header h2 {
+        font-size: var(--font-size-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .weather-icon img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .temperature {
+        font-size: 3.5rem;
+    }
+
+    .forecast-icon img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .slide h1 {
+        font-size: 5rem;
+    }
+
+    .slide h2 {
+        font-size: var(--font-size-xl);
+    }
+
+    .slide p {
+        font-size: var(--font-size-md);
+    }
+
+    .slide ul li {
+        font-size: var(--font-size-base);
+    }
+}
+
+/* Mobile & Tablet Portrait (max-width: 768px) */
 @media screen and (max-width: 768px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        overflow-y: auto;
+    }
+
+    /* Reorder layout: Weather on top, Content in middle, Footer on bottom */
+    .weather-panel {
+        grid-column: 1;
+        grid-row: 1;
+        border-left: none;
+        border-bottom: 3px solid var(--color-panel-border);
+        max-height: none;
+        overflow-y: visible;
+        padding: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+
+    .main-content {
+        grid-column: 1;
+        grid-row: 2;
+        padding: var(--spacing-md);
+    }
+
+    .bottom-panel {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    /* Horizontal layout for weather on mobile */
+    .current-weather {
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .weather-header h2 {
+        font-size: var(--font-size-base);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .weather-icon img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .temperature {
+        font-size: 2.5rem;
+        margin: var(--spacing-xs) 0;
+    }
+
+    .weather-description {
+        font-size: var(--font-size-xs);
+    }
+
+    .detail {
+        font-size: var(--font-size-tiny);
+    }
+
+    /* Horizontal scrolling forecast for mobile */
+    .week-forecast {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: var(--spacing-sm);
+        padding-bottom: var(--spacing-xs);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .forecast-day {
+        flex-direction: column;
+        min-width: 100px;
+        padding: var(--spacing-sm);
+        text-align: center;
+        gap: var(--spacing-xs);
+    }
+
+    .forecast-day:hover {
+        transform: none;
+    }
+
+    .forecast-day-name {
+        font-size: var(--font-size-tiny);
+    }
+
+    .forecast-icon img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .forecast-temps {
+        font-size: var(--font-size-tiny);
+        text-align: center;
+    }
+
+    /* Adjust slides for mobile */
+    .slideshow-container {
+        padding: var(--spacing-lg);
+    }
+
+    .slide h1 {
+        font-size: 3rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .slide h2 {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .slide p {
+        font-size: var(--font-size-sm);
+    }
+
+    .slide ul li {
+        font-size: var(--font-size-xs);
+        margin: var(--spacing-sm) 0;
+        padding-left: var(--spacing-lg);
+    }
+
+    .slide ul li::before {
+        font-size: var(--font-size-base);
+    }
+
+    /* Bottom panel adjustments */
+    .time-date {
+        font-size: var(--font-size-base);
+    }
+
+    .school-name {
+        font-size: var(--font-size-sm);
+    }
+
+    /* Error notifications */
     .error-notification-container {
         top: var(--spacing-sm);
         right: var(--spacing-sm);
@@ -689,6 +886,70 @@ body {
 
     .error-notification-message {
         font-size: var(--font-size-tiny);
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .weather-panel {
+        padding: var(--spacing-sm);
+    }
+
+    .main-content {
+        padding: var(--spacing-sm);
+    }
+
+    .slideshow-container {
+        padding: var(--spacing-md);
+    }
+
+    .slide h1 {
+        font-size: 2rem;
+    }
+
+    .slide h2 {
+        font-size: var(--font-size-md);
+    }
+
+    .slide p {
+        font-size: var(--font-size-xs);
+    }
+
+    .slide ul li {
+        font-size: var(--font-size-xxs);
+        padding-left: var(--spacing-md);
+        margin: var(--spacing-xs) 0;
+    }
+
+    .temperature {
+        font-size: 2rem;
+    }
+
+    .weather-icon img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .forecast-day {
+        min-width: 80px;
+        padding: var(--spacing-xs);
+    }
+
+    .forecast-icon img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .time-date {
+        font-size: var(--font-size-sm);
+    }
+
+    .school-name {
+        font-size: var(--font-size-xs);
     }
 }
 
