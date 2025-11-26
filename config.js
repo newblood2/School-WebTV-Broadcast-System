@@ -54,11 +54,8 @@ window.CONFIG = {
     AUTO_DETECT_LIVESTREAM: false,
 
     // Check interval for livestream status (milliseconds)
-    LIVESTREAM_CHECK_INTERVAL: 60000,  // 1 minute
+    LIVESTREAM_CHECK_INTERVAL: 60000  // 1 minute
 
-    // Admin Panel Password
-    // IMPORTANT: This must match the API_KEY in your .env file
-    // SECURITY: Change this to a strong, unique password!
-    // This password protects the admin panel and dismissal manager
-    ADMIN_PASSWORD: 'admin123'
+    // NOTE: Admin password is stored ONLY in .env file (API_KEY variable)
+    // Authentication is handled server-side for security
 };

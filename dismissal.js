@@ -87,17 +87,15 @@
         e.preventDefault();
         const password = passwordInput.value;
 
-        if (password === window.CONFIG.ADMIN_PASSWORD) {
-            try {
-                await window.SettingsAPI.login(password);
-                sessionStorage.setItem('dismissalLoggedIn', 'true');
-                showDismissalManager();
-            } catch (error) {
-                console.error('API login failed:', error);
-                loginError.textContent = 'Failed to authenticate with API. Check console.';
-            }
-        } else {
+        // Authenticate directly with the API (password is validated server-side only)
+        try {
+            await window.SettingsAPI.login(password);
+            sessionStorage.setItem('dismissalLoggedIn', 'true');
+            showDismissalManager();
+        } catch (error) {
+            console.error('API login failed:', error);
             loginError.textContent = 'Incorrect password. Please try again.';
+            loginError.style.display = 'block';
             passwordInput.value = '';
             passwordInput.focus();
         }
